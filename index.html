@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title></title>
+  <style>
+    .magnifier-container {
+      width: 450px;
+      height: 450px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      background-image: url(./middle.jpg);
+      background-size: cover;
+      position: relative;
+      cursor: move;
+    }
+    .magnifier-container:hover .magnifier,
+    .magnifier-container:hover .view-img {
+      display: block;
+    }
+    .magnifier {
+      width: 70%;
+      height: 70%;
+      border: 1px solid #aaa;
+      background: 50% top no-repeat #FEDE4F;
+      opacity: .5;
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: none;
+    }
+    .view-img {
+      width: 500px;
+      height: 500px;
+      border: 1px solid #000;
+      position: absolute;
+      left: calc(100% + 1px);
+      top: -1px;
+      display: none;
+      background-image: url(./big.jpg);
+      background-position: 0 0;
+      background-repeat: no-repeat;
+      background-size: 800px 800px;
+    }
+  </style>
+</head>
+<body>
+  <div class="magnifier-container">
+    <div class="magnifier"></div>
+    <div class="view-img"></div>
+  </div>
+  <script>
+    var container = document.querySelector('.magnifier-container');
+    var magnifier = document.querySelector('.magnifier');
+    var viewImg = document.querySelector('.view-img');
+    
+    var scale = 0.7 / 1;
+    var bigImgSize = 800;
+    
+    viewImg.style.width = viewImg.style.height = bigImgSize * scale + 'px';
+    
+    // container.addEventListener('mouseenter', function (){
+    //   magnifier.style.display = viewImg.style.display = 'block';
+    // });
+    // 
+    // container.addEventListener('mouseleave', function (){
+    //   magnifier.style.display = viewImg.style.display = 'none';
+    // });
+    
+    container.addEventListener('mousemove', function (e){
+      var x = e.pageX, y = e.pageY, w = magnifier.offsetWidth / 2, maxLt = this.clientWidth - magnifier.offsetWidth, scaleX, scaleY;
+      
+      var L = x - getRect(this, 'left') - 1 - w;
+      var T = y - getRect(this, 'top') - 1 - w;
+      
+      if(L <= 0) L = 0;
+      if(T <= 0) T = 0;
+      if(L >= maxLt) L = maxLt;
+      if(T >= maxLt) T = maxLt;
+      
+      scaleX = L / maxLt;
+      scaleY = T / maxLt;
+      
+      magnifier.style.left = L + 'px';
+      magnifier.style.top = T + 'px';
+      
+      viewImg.style.backgroundPosition = `${-(bigImgSize*(1 - scale))*scaleX}px ${-(bigImgSize*(1 - scale))*scaleY}px`;
+    });
+    
+    function getRect(ele, type){
+      return ele.getBoundingClientRect()[type];
+    }
+  
+  </script>
+</body>
+</html>
